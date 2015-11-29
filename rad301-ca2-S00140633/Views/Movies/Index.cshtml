@@ -1,0 +1,59 @@
+﻿@model IEnumerable<rad301_ca2_S00140633.Models.Movie>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+
+    
+
+    @using (Html.BeginForm("Index", "Movies", FormMethod.Get))
+    {
+
+        <div class="form-horizontal">
+            <div class="form-group"><label class="col-sm-2 control-label">Genre</label><div class="col-md-4"> @Html.DropDownList("movieGenre",null,"All", new { @class = "form-control" } )</div></div>
+            <div class="form-group"><label class="col-sm-2 control-label">Title</label><div class="col-md-4"> @Html.TextBox("Name","SearchString", new { @class = "form-control" } )</div></div>
+            <div class="form-group"><input type="submit" value="Filter" class = "form-control"/></div>
+        </div>
+
+    }
+
+            </p>
+            <table class="table">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Title)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Cert)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Genre)
+                    </th>
+                    <th></th>
+                </tr>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Title)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FilmCert)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Genre)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new { id = item.MovieId }) |
+                            @Html.ActionLink("Details", "Details", new { id = item.MovieId }) |
+                            @Html.ActionLink("Delete", "Delete", new { id = item.MovieId })
+                        </td>
+                    </tr>
+                }
+
+            </table>
+            @Html.ActionLink("Create New", "Create")
