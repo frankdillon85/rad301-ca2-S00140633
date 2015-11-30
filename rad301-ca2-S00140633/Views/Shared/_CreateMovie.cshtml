@@ -1,0 +1,64 @@
+﻿@model rad301_ca2_S00140633.Models.Movie
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <form id="CreateMovie" class="form-horizontal">
+        <h4>Movie</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Cert, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EnumDropDownListFor(model => model.Cert, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Cert, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Genre, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EnumDropDownListFor(model => model.Genre, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Genre, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" class="btn btn-default" onclick="Create()" />
+            </div>
+        </div>
+    </form>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $('#CreateMovie').submit(function() {
+
+            $.ajax({
+                url: '@Url.Action("CreateMovie")',
+                type: "POST",
+                data: $(this).serialize(), // serialize the input controls for this form '#CreateChild'
+                success: function() {
+                    //toastr.info($('form').find('input[name="name"]').val() + ' Added'); // toast
+                    //$('form').find('input[name="name"]').val(""); // zero out the add child box
+                }
+            });
+        });
+    </script>
+}

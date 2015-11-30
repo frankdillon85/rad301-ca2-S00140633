@@ -56,9 +56,9 @@ namespace rad301_ca2_S00140633.Controllers
         }
 
         // GET: Movies/Create
-        public ActionResult Create()
+        public PartialViewResult CreateMovie()
         {
-            return View();
+            return PartialView("_CreateMovie");
         }
 
         // POST: Movies/Create
@@ -66,7 +66,7 @@ namespace rad301_ca2_S00140633.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "MovieId,Title,Cert,Genre")] Movie movie)
+        public ActionResult CreateMovie([Bind(Include = "MovieId,Title,Cert,Genre")] Movie movie)
         {
             if (ModelState.IsValid)
             {
