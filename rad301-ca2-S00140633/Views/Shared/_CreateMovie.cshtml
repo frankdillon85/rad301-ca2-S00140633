@@ -1,26 +1,24 @@
 ﻿@model rad301_ca2_S00140633.Models.Movie
 
-
-@using (Html.BeginForm())
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "CreateMovieForm" }))
 {
     @Html.AntiForgeryToken()
-
-    <form id="CreateMovie" class="form-horizontal">
+ 
+    <div class="form-horizontal">
         <h4>Movie</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
-            @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2"  })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control", name="Title" } })
                 @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
             </div>
         </div>
-
         <div class="form-group">
             @Html.LabelFor(model => model.Cert, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EnumDropDownListFor(model => model.Cert, htmlAttributes: new { @class = "form-control" })
+                @Html.EnumDropDownListFor(model => model.Cert, htmlAttributes: new { @class = "form-control", name = "Cert" })
                 @Html.ValidationMessageFor(model => model.Cert, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -28,37 +26,48 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Genre, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EnumDropDownListFor(model => model.Genre, htmlAttributes: new { @class = "form-control" })
+                @Html.EnumDropDownListFor(model => model.Genre, htmlAttributes: new { @class = "form-control", name = "Genre" })
                 @Html.ValidationMessageFor(model => model.Genre, "", new { @class = "text-danger" })
             </div>
         </div>
-
         <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" class="btn btn-default" onclick="Create()" />
+            @Html.LabelFor(model => model.Rating, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div id="ratings" style="margin-top:14px"></div>               
             </div>
         </div>
-    </form>
-}
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" class="btn btn-xs btn-default"  />
+            </div>
+        </div>
+    </div>
 
+}
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
+<script>
+    
+    $('#CreateMovieForm').submit(function () {
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-    <script>
-        $('#CreateMovie').submit(function() {
-
+        var value = $('#ratings').rateit('value');
+        if ($(this).find('input[name="Title"]').val() != "") {
+            
             $.ajax({
                 url: '@Url.Action("CreateMovie")',
                 type: "POST",
-                data: $(this).serialize(), // serialize the input controls for this form '#CreateChild'
-                success: function() {
+                data: $(this).serialize() + "&Rating=" + value, // serialize the input controls for this form '#CreateChild'
+                success: function () {
+                    debugger;
+                    window.location.reload(true);
+                    //showChildren($('form').find('input[name="campId"]').val()); // refresh the table of children
                     //toastr.info($('form').find('input[name="name"]').val() + ' Added'); // toast
                     //$('form').find('input[name="name"]').val(""); // zero out the add child box
                 }
             });
-        });
-    </script>
-}
+        }
+        return false;
+    });
+
+</script>

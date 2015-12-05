@@ -15,17 +15,36 @@ namespace rad301_ca2_S00140633.Controllers
         private MovieDB db = new MovieDB();
 
         // GET: Movies
-        public ActionResult Index(string movieGenre, string searchString)
+        public ActionResult Index(string movieGenre, string searchString, string sort)
         {
-            
+            ViewBag.PageTitle = db.Movies.Count() +  " Movies with " + db.Actors.Count() + " Actors";
+            if (sort == null) sort = "ascRating";
+            ViewBag.ratingOrder = (sort == "ascRating") ? "descRating" : "ascRating";
+
+            IQueryable<Movie> movies = db.Movies;
+            switch (sort)
+            {
+                
+                case "ascRating":
+                    ViewBag.dateOrder = "descRating";
+                    movies = movies.OrderByDescending(c => c.Rating).Include(c => c.Actors);
+                    break;
+                case "descRating":
+                    ViewBag.numberOrder = "ascRating";
+                    movies = movies.OrderBy(c => c.Rating).Include(c => c.Actors);
+                    break;
+                default:
+                    ViewBag.numberOrder = "ascNumber";
+                    movies = movies.OrderBy(c => c.Rating).Include(c => c.Actors);
+                    break;
+            }
+
             var GenreQry = (from m in db.Movies
                            orderby m.Genre
                            select m.Genre).Distinct();
 
             ViewBag.movieGenre = new SelectList(GenreQry);
 
-            var movies = from m in db.Movies
-                         select m;
 
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -37,7 +56,7 @@ namespace rad301_ca2_S00140633.Controllers
                 movies = movies.Where(x => x.Genre.ToString() == movieGenre);
             }
 
-            return View(movies);
+            return View(movies.ToList());
         }
 
         // GET: Movies/Details/5
@@ -54,7 +73,7 @@ namespace rad301_ca2_S00140633.Controllers
             }
             return View(movie);
         }
-
+ 
         // GET: Movies/Create
         public PartialViewResult CreateMovie()
         {
@@ -66,7 +85,7 @@ namespace rad301_ca2_S00140633.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateMovie([Bind(Include = "MovieId,Title,Cert,Genre")] Movie movie)
+        public ActionResult CreateMovie([Bind(Include = "MovieId,Title,Cert,Genre,Rating")] Movie movie)
         {
             if (ModelState.IsValid)
             {

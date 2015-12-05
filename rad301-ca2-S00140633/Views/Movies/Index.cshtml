@@ -4,7 +4,7 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>@ViewBag.PageTitle</h2>
 <div class="container-fluid">
     @using (Html.BeginForm("Index", "Movies", FormMethod.Get))
     {
@@ -16,7 +16,7 @@
             <div class="form-group"><label class="col-sm-2 col-md-offset-1 col-xs-4 control-label input-sm">Title</label><div class="col-md-7 col-xs-6"> @Html.TextBox("SearchString", "", new { @class = "form-control input-sm" })</div></div>
             <div class="form-group">
                 <div class="col-md-offset-3 col-md-5">
-                    <input type="submit" value="Filter" class="btn btn-sm btn-danger" />
+                    <input type="submit" value="Filter" class="btn btn-xs btn-danger" />
                 </div>
             </div>
         </div>
@@ -24,44 +24,72 @@
 
     }
 
-    <div id="AllMovies" class="col-md-6">
-        <table class="table">
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Title)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Cert)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Genre)
-                </th>
-                <th></th>
-            </tr>
-
-            @foreach (var item in Model)
-            {
+    <div id="AllMovies" class="col-md-6 col-md-offset-1 col-sm-10">
+        @if (Model.Any())
+        {
+            <table class="table">
                 <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Title)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.FilmCert)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Genre)
-                    </td>
-                    <td>
-                        @Html.ActionLink("Edit", "Edit", new { id = item.MovieId }) |
-                        @Html.ActionLink("Details", "Details", new { id = item.MovieId }) |
-                        @Html.ActionLink("Delete", "Delete", new { id = item.MovieId })
-                    </td>
-                </tr>
-            }
+                    <th>
+                        @Html.DisplayNameFor(model => model.Title)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Cert)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Genre)
+                    </th>
+                    <th>
+                        <a class="btn btn-xs btn-info" href="@Url.Action("Index", new { sort = @ViewBag.ratingOrder })">
+                            @if (ViewBag.ratingOrder == "ascRating")
+                            {
+                                <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
+                            }
+                            else if (ViewBag.ratingOrder == "descRating")
+                            {
+                                <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
 
-        </table>
-        <button onclick="CreateMovie()" class="btn btn-info" ></button>
+                            }
+                            &nbsp;Rating
+                        </a>
+
+                    </th>
+                    <th></th>
+                </tr>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Title)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FilmCert)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Genre)
+                        </td>
+                        <td>
+                            <span class="rateit" data-rateit-value="@item.Rating" data-rateit-ispreset="true" data-rateit-readonly="true"></span>
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new { id = item.MovieId }) |
+                            @Html.ActionLink("Details", "Details", new { id = item.MovieId }) |
+                            @Html.ActionLink("Delete", "Delete", new { id = item.MovieId })
+                        </td>
+                    </tr>
+                }
+
+
+            </table>
+        }
+        else
+        {
+        <p>Sorry! There are no movies that match your search </p>
+        }
+
+        <button onclick="CreateMovie()" class="btn btn-sm btn-info">Create New</button>
     </div>
+
 
 </div>
 @section scripts
@@ -77,14 +105,16 @@
                     $('#AllMovies').hide();
                     $('#AllMovies').html(data);
                     $('#AllMovies').fadeIn(1000);
+                    $('#ratings').rateit({ max: 5, step: 0.25, value: 3, });
                 },
                 error: function () {
-                  
+
                 }
             }
             );
+
         }
-        
+
     </script>
-    }
+}
 
