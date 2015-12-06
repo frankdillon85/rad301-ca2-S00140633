@@ -10,8 +10,10 @@ namespace rad301_ca2_S00140633
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                 "~/Scripts/jquery-{version}.js",
+                "~/Scripts/jquery-ui-{version}.js",
                         "~/Scripts/jquery.blockUI.js",
-                         "~/Scripts/jquery.rateit.js"
+                         "~/Scripts/jquery.rateit.js",
+                         "~/Scripts/toastr.js"
                         ));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
@@ -28,6 +30,7 @@ namespace rad301_ca2_S00140633
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                 "~/Content/sandstone.bootstrap.css",
+                "~/Content/toastr.css",
                 "~/Content/site.css"));
         }
     }

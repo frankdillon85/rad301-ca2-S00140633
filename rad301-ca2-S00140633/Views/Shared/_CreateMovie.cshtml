@@ -2,6 +2,7 @@
 
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "CreateMovieForm" }))
 {
+
     @Html.AntiForgeryToken()
  
     <div class="form-horizontal">
@@ -11,23 +12,21 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2"  })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control", name="Title" } })
-                @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                <label id="lblError" style="color:red; display:none">*You must enter Movie Title</label>               
             </div>
         </div>
         <div class="form-group">
             @Html.LabelFor(model => model.Cert, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EnumDropDownListFor(model => model.Cert, htmlAttributes: new { @class = "form-control", name = "Cert" })
-                @Html.ValidationMessageFor(model => model.Cert, "", new { @class = "text-danger" })
+                @Html.EnumDropDownListFor(model => model.Cert, htmlAttributes: new { @class = "form-control"})
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.Genre, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EnumDropDownListFor(model => model.Genre, htmlAttributes: new { @class = "form-control", name = "Genre" })
-                @Html.ValidationMessageFor(model => model.Genre, "", new { @class = "text-danger" })
+                @Html.EnumDropDownListFor(model => model.Genre, htmlAttributes: new { @class = "form-control" })
             </div>
         </div>
         <div class="form-group">
@@ -60,12 +59,16 @@
                 data: $(this).serialize() + "&Rating=" + value, // serialize the input controls for this form '#CreateChild'
                 success: function () {
                     debugger;
-                    window.location.reload(true);
-                    //showChildren($('form').find('input[name="campId"]').val()); // refresh the table of children
-                    //toastr.info($('form').find('input[name="name"]').val() + ' Added'); // toast
-                    //$('form').find('input[name="name"]').val(""); // zero out the add child box
+                    window.location.reload(true);//reloads window
+                },
+                error: function() {
+                    
                 }
             });
+        }
+        else
+        {
+            $('#lblError').show();
         }
         return false;
     });

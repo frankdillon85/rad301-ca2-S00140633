@@ -1,0 +1,54 @@
+﻿@model IEnumerable<rad301_ca2_S00140633.Models.Actor>
+
+<div id="ActorsDiv">
+    <table class="table " id="actorTbl">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Gender)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr data-item-id="@item.ActorId">
+                <td data-container="body" title="@item.Character">
+                    @Html.DisplayFor(modelItem => item.FullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Gender)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.ActorId }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.ActorId })
+                </td>
+            </tr>
+        }
+
+    </table>
+    <button onclick="CreateActor()" class="btn btn-sm btn-info">Create New</button>
+</div>
+<script>
+    $(function () {
+        $("#actorTbl tr td:first-child").tooltip();
+    });
+
+    function CreateActor()
+    {
+        debugger;
+        $.ajax({
+            url: '@Url.Action("CreateActor", new { id = @ViewBag.MovieId })',  
+            success: function (data) {
+                $('#ActorsDiv').hide();
+                $('#ActorsDiv').html(data);
+                $('#ActorsDiv').fadeIn(1000);
+            },
+            error: function () {
+
+            }
+        });
+    }
+</script>

@@ -73,7 +73,7 @@ namespace rad301_ca2_S00140633.Controllers
             }
             return View(movie);
         }
- 
+
         // GET: Movies/Create
         public PartialViewResult CreateMovie()
         {
@@ -153,7 +153,42 @@ namespace rad301_ca2_S00140633.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+        public PartialViewResult ActorsbyId(int id)
+        {
+            var movie = db.Movies.Find(id);
+            @ViewBag.MovieId = id;
+            @ViewBag.campName = movie.Title;
+            return PartialView("_ActorsInMovie", movie.Actors);
+        }
 
+
+        // GET: Movies/Create
+        public PartialViewResult CreateActor(int id)
+        {
+            Actor act = new Actor();
+            ViewBag.MovieId = id;
+            return PartialView("_AddActor");
+        }
+
+        // POST: Movies/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public PartialViewResult CreateActor([Bind(Include = "ActorId,FirstName,LastName,Gender,Character,MovieId")] Actor actor, int id)
+        {
+            var movie = db.Movies.Find(id);
+            @ViewBag.MovieId = id;
+            
+            if (ModelState.IsValid)
+            {
+                db.Actors.Add(actor);
+                db.SaveChanges();
+                return PartialView("_ActorsInMovie", movie.Actors);
+            }
+
+            return PartialView("_ActorsInMovie");
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)

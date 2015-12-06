@@ -3,8 +3,11 @@
 @{
     ViewBag.Title = "Index";
 }
-
-<h2>@ViewBag.PageTitle</h2>
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h2>@ViewBag.PageTitle</h2>
+    </div>
+</div>
 <div class="container-fluid">
     @using (Html.BeginForm("Index", "Movies", FormMethod.Get))
     {
@@ -23,73 +26,77 @@
 
 
     }
-
-    <div id="AllMovies" class="col-md-6 col-md-offset-1 col-sm-10">
-        @if (Model.Any())
-        {
-            <table class="table">
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Title)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Cert)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Genre)
-                    </th>
-                    <th>
-                        <a class="btn btn-xs btn-info" href="@Url.Action("Index", new { sort = @ViewBag.ratingOrder })">
-                            @if (ViewBag.ratingOrder == "ascRating")
-                            {
-                                <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
-                            }
-                            else if (ViewBag.ratingOrder == "descRating")
-                            {
-                                <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
-
-                            }
-                            &nbsp;Rating
-                        </a>
-
-                    </th>
-                    <th></th>
-                </tr>
-
-                @foreach (var item in Model)
-                {
+    <div id="AllMovies" class="col-md-10">
+        <div  class="col-md-8">
+            @if (Model.Any())
+            {
+                <table class="table table-hover" id="movieTbl">
                     <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Title)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.FilmCert)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Genre)
-                        </td>
-                        <td>
-                            <span class="rateit" data-rateit-value="@item.Rating" data-rateit-ispreset="true" data-rateit-readonly="true"></span>
-                        </td>
-                        <td>
-                            @Html.ActionLink("Edit", "Edit", new { id = item.MovieId }) |
-                            @Html.ActionLink("Details", "Details", new { id = item.MovieId }) |
-                            @Html.ActionLink("Delete", "Delete", new { id = item.MovieId })
-                        </td>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Title)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Cert)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Genre)
+                        </th>
+                        <th>
+                            <a class="btn btn-xs btn-info" href="@Url.Action("Index", new { sort = @ViewBag.ratingOrder })">
+                                @if (ViewBag.ratingOrder == "ascRating")
+                                {
+                                    <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
+                                }
+                                else if (ViewBag.ratingOrder == "descRating")
+                                {
+                                    <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
+
+                                }
+                                &nbsp;Rating
+                            </a>
+
+                        </th>
+                        <th></th>
                     </tr>
-                }
+
+                    @foreach (var item in Model)
+                {
+                        <tr data-item-id="@item.MovieId">
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Title)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FilmCert)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Genre)
+                            </td>
+                            <td>
+                                <span class="rateit" data-rateit-value="@item.Rating" data-rateit-ispreset="true" data-rateit-readonly="true"></span>
+                            </td>
+                            <td>
+                                @Html.ActionLink("Edit", "Edit", new { id = item.MovieId }) |
+                                @Html.ActionLink("Details", "Details", new { id = item.MovieId }) |
+                                @Html.ActionLink("Delete", "Delete", new { id = item.MovieId })
+                            </td>
+                        </tr>
+                    }
 
 
-            </table>
-        }
-        else
-        {
-        <p>Sorry! There are no movies that match your search </p>
-        }
+                </table>
 
-        <button onclick="CreateMovie()" class="btn btn-sm btn-info">Create New</button>
+            }
+            else
+            {
+                <p>Sorry! There are no movies that match your search </p>
+            }
+
+            <button onclick="CreateMovie()" class="btn btn-sm btn-info">Create New</button>
+        </div>
+        <div class="col-md-4" id="divActors" hidden="">
+
+        </div>
     </div>
-
 
 </div>
 @section scripts
@@ -110,9 +117,33 @@
                 error: function () {
 
                 }
+            });
+        }
+        $('#movieTbl tr').click(function (evt) {
+            var movieId = $(this).data("item-id");
+            var $cell=$(evt.target).closest('td');//stpr click event on the last column
+            if ($cell.index() < 4) {
+                $("#movieTbl tr").css("background", "#fff")
+                $(this).css('background-color', '#ffffb3');
+                showActors(movieId)                
             }
-            );
+        });
 
+        function showActors(movieId)
+        {
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("ActorsById")',
+                data: { id: movieId },
+                success: function (data) {
+                    $('#divActors').html(data);
+                    $('#divActors').fadeIn("slow");
+                    toastr.info('Hover over actor name to see their character')
+                },
+                error: function (data) {
+                    $('#Detail').html('<h3>Error in retrieval</h3>');
+                }
+            });
         }
 
     </script>
