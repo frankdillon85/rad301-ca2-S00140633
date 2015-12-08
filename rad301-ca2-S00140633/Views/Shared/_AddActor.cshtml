@@ -44,7 +44,7 @@
 }
 
 <div class="col-md-offset-4 col-md-10">
-    <button class="btn btn-xs btn-info" onclick="showActors(@ViewBag.MovieId)">Back to list</button>
+    <button class="btn btn-xs btn-info" onclick="BackActors(@ViewBag.MovieId)">Back to list</button>
 </div>
 
 <script>
@@ -61,12 +61,22 @@
                         url: '@Url.Action("HeaderDetails")',
                         type: "GET",
                         success: function(dataMovies){
-                            $('#ActorsDiv').hide();
-                            $('#ActorsDiv').html(dataAct);
-                            $('#ActorsDiv').fadeIn(1000);
-                            $('#headerDetails').hide();
-                            $('#headerDetails').html(dataMovies);
-                            $('#headerDetails').fadeIn(1000);
+                            $.ajax({
+                                url: '@Url.Action("showPieChart", new {id= @ViewBag.MovieId })',
+                                type: "GET",
+                                success: function (dataPiechart) {
+                                    $('#ActorsDiv').hide();
+                                    $('#ActorsDiv').html(dataAct);
+                                    $('#ActorsDiv').fadeIn(1000);
+                                    $('#headerDetails').hide();
+                                    $('#headerDetails').html(dataMovies);
+                                    $('#headerDetails').fadeIn(1000);
+                                    $('#piechart').hide();
+                                    $('#piechart').html(dataPiechart);
+                                    $('#piechart').fadeIn(1000);
+                                
+                                }
+                            });
                         }
                     });
                 }
@@ -79,17 +89,20 @@
 
         return false;
     });
-    function BacktoActors()
-    {
+    function BackActors(movieId) {
         $.ajax({
-            url: '@Url.Action("CreateActor", new { id = @ViewBag.MovieId })',
-            type: "POST",
-            data: $(this).serialize() + "&MovieId=" + @ViewBag.MovieId,
+            type: "GET",
+            url: '@Url.Action("ActorsById")',
+            data: { id: movieId },
             success: function (data) {
-                $('#ActorsDiv').hide();
                 $('#ActorsDiv').html(data);
-                $('#ActorsDiv').fadeIn(1000);
+                $('#ActorsDiv').fadeIn("slow");
+                toastr.info('Hover over actor name to see their character')
+            },
+            error: function (data) {
+                $('#Detail').html('<h3>Error in retrieval</h3>');
             }
         });
     }
+    
 </script>

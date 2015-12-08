@@ -70,6 +70,7 @@ namespace rad301_ca2_S00140633.Controllers
         //GET: Movies/Details/5
         public PartialViewResult Details(int? id)
         {
+            
             if (id == null)
             {
                 //return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -79,6 +80,8 @@ namespace rad301_ca2_S00140633.Controllers
             {
                 //return HttpNotFound();
             }
+            
+
             return PartialView("_MovieDetails",movie);
         }
 
@@ -265,6 +268,16 @@ namespace rad301_ca2_S00140633.Controllers
             db.Actors.Remove(actor);
             db.SaveChanges();
             return PartialView("_ActorsInMovie", movie.Actors);
+        }
+
+        public PartialViewResult showPieChart(int? id)
+        {
+            Movie movie = db.Movies.Find(id);
+
+            ViewBag.GenderMale = (movie.Actors.Count(act => act.Gender == Genders.Male)==0)? 0 : movie.Actors.Count(act => act.Gender == Genders.Male);
+            ViewBag.GenderFemale = (movie.Actors.Count(act => act.Gender == Genders.Female) == 0) ? 0 : movie.Actors.Count(act => act.Gender == Genders.Female);
+
+            return PartialView("_PieChart", movie);
         }
 
         #endregion

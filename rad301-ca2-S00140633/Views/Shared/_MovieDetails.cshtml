@@ -17,7 +17,7 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Cert)
+            @Html.DisplayFor(model => model.FilmCert)
         </dd>
 
         <dt>
@@ -43,48 +43,8 @@
 </div>
 
 <div id="ActorsDiv" class="col-md-4">
-    @Html.Action("ActorsbyId", new {id = Model.MovieId })
+    @Html.Action("ActorsbyId", new { id = Model.MovieId })
 </div>
-<div class="col-md-4" id="chartdiv" style="height:400px"></div>
-<script>
-    var chart = AmCharts.makeChart("chartdiv", {
-        "type": "pie",
-        "theme": "light",
-        "dataProvider": [{
-            "Gender": "Female",
-            "value": 3,
-            "pulled": true
-        }, {
-            "Gender": "Male",
-            "value": 2,
-            "pulled": true
-        }],
-
-        "labelsEnabled": false,
-        "valueField": "value",
-        "titleField": "Gender",
-        "pulledField": "pulled",
-        "outlineAlpha": 0.4,
-        "depth3D": 15,
-        "balloonText": "[[title]]<br><span style='font-size:14px'><b>[[value]]</b> ([[percents]]%)</span>",
-        "angle": 20,
-        "export": {
-            "enabled": true
-        }
-
-
-    });
-    jQuery('.chart-input').off().on('input change', function () {
-        var property = jQuery(this).data('property');
-        var target = chart;
-        var value = Number(this.value);
-        chart.startDuration = 0;
-
-        if (property == 'innerRadius') {
-            value += "%";
-        }
-
-        target[property] = value;
-        chart.validateNow();
-    });
-</script>
+<div class="col-md-4" id="piechart">
+    @Html.Action("showPieChart", new { id = Model.MovieId })
+</div>

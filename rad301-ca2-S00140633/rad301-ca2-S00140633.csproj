@@ -455,6 +455,7 @@
     <Content Include="Views\Shared\_DeleteActor.cshtml" />
     <Content Include="Views\Shared\_NumberOfMovies.cshtml" />
     <Content Include="Views\Shared\_EditMovie.cshtml" />
+    <Content Include="Views\Shared\_PieChart.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

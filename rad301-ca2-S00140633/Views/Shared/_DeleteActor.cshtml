@@ -6,7 +6,7 @@
         <h4 style="color:teal" class="text-center">Delete @Model.FullName from @Model.Movie.Title ?</h4>
         <div class="col-md-offset-4">
             <button class="btn btn-xs btn-danger" onclick="ConfirmDeleteActor(@Model.ActorId)">Confirm</button> |
-            <button class="btn btn-xs btn-info" onclick="showActors(@Model.MovieId)">Back to list</button>
+            <button class="btn btn-xs btn-info" onclick="BackActors(@Model.MovieId)">Back to list</button>
         </div>
 
 </div>
@@ -22,18 +22,43 @@
                     url: '@Url.Action("HeaderDetails")',
                     type: "GET",
                     success: function (dataMovies) {
-                        $('#ActorsDiv').hide();
-                        $('#ActorsDiv').html(dataAct);
-                        $('#ActorsDiv').fadeIn(1000);
-                        $('#headerDetails').hide();
-                        $('#headerDetails').html(dataMovies);
-                        $('#headerDetails').fadeIn(1000);
+                        $.ajax({
+                            url: '@Url.Action("showPieChart", new {id= @Model.MovieId })',
+                            type: "GET",
+                            success: function (dataPiechart) {
+                                $('#ActorsDiv').hide();
+                                $('#ActorsDiv').html(dataAct);
+                                $('#ActorsDiv').fadeIn(1000);
+                                $('#headerDetails').hide();
+                                $('#headerDetails').html(dataMovies);
+                                $('#headerDetails').fadeIn(1000);
+                                $('#piechart').hide();
+                                $('#piechart').html(dataPiechart);
+                                $('#piechart').fadeIn(1000);
+
+                            }
+                        });
                     }
                 });
             }
         });
         return false;
     };
+    function BackActors(movieId) {
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("ActorsById")',
+            data: { id: movieId },
+            success: function (data) {
+                $('#ActorsDiv').html(data);
+                $('#ActorsDiv').fadeIn("slow");
+                toastr.info('Hover over actor name to see their character')
+            },
+            error: function (data) {
+                $('#Detail').html('<h3>Error in retrieval</h3>');
+            }
+        });
+    }
 
 
 </script>

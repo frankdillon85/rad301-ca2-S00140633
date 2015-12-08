@@ -45,7 +45,7 @@
 }
 
 <div class="col-md-offset-4 col-md-8" >
-    <button class="btn btn-xs btn-info" onclick="showActors(@Model.MovieId)">Back to list</button>
+    <button class="btn btn-xs btn-info" onclick="BackActors(@Model.MovieId)">Back to list</button>
 </div>
 
 <script>
@@ -72,5 +72,20 @@
 
         return false;
     });
+    function BackActors(movieId) {
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("ActorsById")',
+            data: { id: movieId },
+            success: function (data) {
+                $('#ActorsDiv').html(data);
+                $('#ActorsDiv').fadeIn("slow");
+                toastr.info('Hover over actor name to see their character')
+            },
+            error: function (data) {
+                $('#Detail').html('<h3>Error in retrieval</h3>');
+            }
+        });
+    }
 </script>
 
