@@ -10,6 +10,9 @@ namespace rad301_ca2_S00140633
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                 "~/Scripts/jquery-{version}.js",
+                "~/Content/amcharts/amcharts.js",
+                "~/Content/amcharts/pie.js",
+                "~/Content/amcharts/themes/light.js",
                 "~/Scripts/jquery.blockUI.js",
                 "~/Scripts/jquery.rateit.js",
                          "~/Scripts/toastr.js"

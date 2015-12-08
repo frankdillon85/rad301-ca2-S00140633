@@ -63,23 +63,23 @@ namespace rad301_ca2_S00140633.Controllers
             ViewBag.PageTitle = db.Movies.Count() + " Movies with " + db.Actors.Count() + " Actors";
             return PartialView("_NumberOfMovies");
         }
-        //public PartialViewResult ListOfMovies()
-        //{
-        //    return PartialView("_AllMovies",db.Movies.ToList());
-        //}
-        // GET: Movies/Details/5
-        public ActionResult Details(int? id)
+        public PartialViewResult ListOfMovies()
+        {
+            return PartialView("_AllMovies", db.Movies.ToList());
+        }
+        //GET: Movies/Details/5
+        public PartialViewResult Details(int? id)
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                //return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Movie movie = db.Movies.Find(id);
             if (movie == null)
             {
-                return HttpNotFound();
+                //return HttpNotFound();
             }
-            return View(movie);
+            return PartialView("_MovieDetails",movie);
         }
 
         // GET: Movies/Create
@@ -106,18 +106,18 @@ namespace rad301_ca2_S00140633.Controllers
         }
 
         // GET: Movies/Edit/5
-        public ActionResult Edit(int? id)
+        public PartialViewResult Edit(int? id)
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                //return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Movie movie = db.Movies.Find(id);
             if (movie == null)
             {
-                return HttpNotFound();
+                //return HttpNotFound();
             }
-            return View(movie);
+            return PartialView("_EditMovie",movie);
         }
 
         // POST: Movies/Edit/5
@@ -125,7 +125,7 @@ namespace rad301_ca2_S00140633.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "MovieId,Title,Cert,Genre")] Movie movie)
+        public ActionResult Edit([Bind(Include = "MovieId,Title,Cert,Genre,Rating")] Movie movie)
         {
             if (ModelState.IsValid)
             {
@@ -224,10 +224,10 @@ namespace rad301_ca2_S00140633.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public PartialViewResult EditActor([Bind(Include = "ActorId,FirstName,LastName,Gender,Character,MovieId")] Actor actor, int id)
+        public PartialViewResult EditActor([Bind(Include = "ActorId,FirstName,LastName,Gender,Character,MovieId")] Actor actor)
         {
-            var movie = db.Movies.Find(id);
-            @ViewBag.MovieId = id;
+            var movie = db.Movies.Find(actor.MovieId);
+            @ViewBag.MovieId = movie.MovieId;
             ViewBag.MovieTitle = movie.Title;
 
             if (ModelState.IsValid)
@@ -254,13 +254,14 @@ namespace rad301_ca2_S00140633.Controllers
 
         // POST: Movies/DeleteActorConfirmed/5
         [HttpPost]
-        public PartialViewResult DeleteActorConfirmed(int id, int MovieId)
+        public PartialViewResult DeleteActorConfirmed(int id)
         {
-            var movie = db.Movies.Find(MovieId);
-            @ViewBag.MovieId = MovieId;
+            Actor actor = db.Actors.Find(id);
+
+            var movie = db.Movies.Find(actor.MovieId);
+            @ViewBag.MovieId = movie.MovieId;
             ViewBag.MovieTitle = movie.Title;
 
-            Actor actor = db.Actors.Find(id);
             db.Actors.Remove(actor);
             db.SaveChanges();
             return PartialView("_ActorsInMovie", movie.Actors);

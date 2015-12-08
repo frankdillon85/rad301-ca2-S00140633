@@ -44,8 +44,10 @@
             toastr.info('Welcome to Movie Facts.Click on a movie to see its actors');
         });
 
+        
+
         function CreateMovie() {
-            
+
 
             $('#FilterDiv').block({ message: null });
 
@@ -62,13 +64,53 @@
                 }
             });
         }
+        function EditMovie(MovieId,rating) {
+
+
+            $('#FilterDiv').block({ message: null });
+
+            $.ajax({
+                url: '@Url.Action("Edit")',
+                type: 'GET',
+                data: { id: MovieId},
+                success: function (data) {
+                    $('#AllMovies').hide();
+                    $('#AllMovies').html(data);
+                    $('#AllMovies').fadeIn(1000);
+                    $('#ratingsEdit').rateit({ max: 5, step: 0.25, value: rating});
+                },
+                error: function () {
+
+                }
+            });
+        }
+        //returns details partialview
+        function DetailsMovie(MovieId) {
+
+            $('#FilterDiv').block({ message: null });
+
+            $.ajax({
+                url: '@Url.Action("Details")',
+                type: 'GET',
+                data: { id: MovieId },
+                success: function (data) {
+                    $('#AllMovies').hide();
+                    $('#AllMovies').html(data);
+                    $('#AllMovies').fadeIn(1000);
+                },
+                error: function () {
+
+                }
+            });
+        }
+
         $('#movieTbl tr').click(function (evt) {
             var movieId = $(this).data("item-id");
             var $cell=$(evt.target).closest('td');//stpr click event on the last column
             if ($cell.index() < 4) {
                 $("#movieTbl tr").css("background", "#fff")
                 $(this).css('background-color', '#ffffb3');
-                showActors(movieId)                
+                showActors(movieId)
             }
         });
 
@@ -88,6 +130,7 @@
                 }
             });
         }
+
 
     </script>
 }

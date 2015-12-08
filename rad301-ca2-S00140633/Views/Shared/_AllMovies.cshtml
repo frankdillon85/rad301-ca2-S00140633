@@ -61,9 +61,9 @@
                         <span id="ratingSpan" class="rateit" data-rateit-value="@item.Rating" data-rateit-ispreset="true" data-rateit-readonly="true"></span>
                     </td>
                     <td>
-                        <button onclick="EditMovie(@item.MovieId)" class="btn btn-xs btn-info">Edit</button>
-                        <button onclick="DeleteMovie(@item.MovieId)" class="btn btn-xs btn-success">Details</button>
-                        <button onclick="EditMovie(@item.MovieId)" class="btn btn-xs btn-danger">Delete</button>
+                        <button onclick="EditMovie(@item.MovieId,@item.Rating)" class="btn btn-xs btn-info">Edit</button>
+                        <button onclick="DetailsMovie(@item.MovieId)" class="btn btn-xs btn-success">Details</button>
+                        <button onclick="DeleteMovie(@item.MovieId)" class="btn btn-xs btn-danger">Delete</button>
                     </td>
                 </tr>
             }

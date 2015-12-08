@@ -1,7 +1,7 @@
 ﻿@model rad301_ca2_S00140633.Models.Movie
 
-<div>
-    <h4>Movie</h4>
+<div class="col-md-4">
+    <h4 style="color:teal" class="text-center">Details Of @Model.Title</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -25,9 +25,8 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Rating)
+            @Html.DisplayFor(model => model.Rating) Stars
         </dd>
-
         <dt>
             @Html.DisplayNameFor(model => model.Genre)
         </dt>
@@ -37,8 +36,55 @@
         </dd>
 
     </dl>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.MovieId }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.MovieId }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+
+<div id="ActorsDiv" class="col-md-4">
+    @Html.Action("ActorsbyId", new {id = Model.MovieId })
+</div>
+<div class="col-md-4" id="chartdiv" style="height:400px"></div>
+<script>
+    var chart = AmCharts.makeChart("chartdiv", {
+        "type": "pie",
+        "theme": "light",
+        "dataProvider": [{
+            "Gender": "Female",
+            "value": 3,
+            "pulled": true
+        }, {
+            "Gender": "Male",
+            "value": 2,
+            "pulled": true
+        }],
+
+        "labelsEnabled": false,
+        "valueField": "value",
+        "titleField": "Gender",
+        "pulledField": "pulled",
+        "outlineAlpha": 0.4,
+        "depth3D": 15,
+        "balloonText": "[[title]]<br><span style='font-size:14px'><b>[[value]]</b> ([[percents]]%)</span>",
+        "angle": 20,
+        "export": {
+            "enabled": true
+        }
+
+
+    });
+    jQuery('.chart-input').off().on('input change', function () {
+        var property = jQuery(this).data('property');
+        var target = chart;
+        var value = Number(this.value);
+        chart.startDuration = 0;
+
+        if (property == 'innerRadius') {
+            value += "%";
+        }
+
+        target[property] = value;
+        chart.validateNow();
+    });
+</script>

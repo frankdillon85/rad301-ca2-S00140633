@@ -4,19 +4,19 @@
 <div>
  
         <h4 style="color:teal" class="text-center">Delete @Model.FullName from @Model.Movie.Title ?</h4>
-        <div class="form-actions no-color">
-            <button class="btn btn-xs btn-danger" onclick="ConfirmDeleteActor(@Model.ActorId,@Model.MovieId)">Confirm</button> |
-            @Html.ActionLink("Back to List", "Index")
+        <div class="col-md-offset-4">
+            <button class="btn btn-xs btn-danger" onclick="ConfirmDeleteActor(@Model.ActorId)">Confirm</button> |
+            <button class="btn btn-xs btn-info" onclick="showActors(@Model.MovieId)">Back to list</button>
         </div>
 
 </div>
 <script>
-    function ConfirmDeleteActor (ActorId, MovieId) {
+    function ConfirmDeleteActor (ActorId) {
         debugger;
         $.ajax({
             url: '@Url.Action("DeleteActorConfirmed")',
             type: "POST",
-            data: { id: ActorId, MovieId: MovieId },
+            data: { id: ActorId},
             success: function (dataAct) {
                 $.ajax({
                     url: '@Url.Action("HeaderDetails")',

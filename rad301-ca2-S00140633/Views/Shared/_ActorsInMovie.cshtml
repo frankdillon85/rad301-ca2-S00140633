@@ -55,7 +55,8 @@
         function EditActor(ActorId) {
             debugger;
             $.ajax({
-                url: 'Movies/EditActor/',
+                url: '@Url.Action("EditActor")',
+                type: 'GET',
                 data: { id: ActorId},
                 success: function (data) {
                     $('#ActorsDiv').hide();
@@ -70,7 +71,7 @@
         function DeleteActor(ActorId) {
             debugger;
             $.ajax({
-                url: 'Movies/DeleteActor/',
+                url: '@Url.Action("DeleteActor")',
                 data: { id: ActorId },
                 success: function (data) {
                     $('#ActorsDiv').hide();
