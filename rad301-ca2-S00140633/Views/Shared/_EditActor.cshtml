@@ -1,13 +1,16 @@
 ﻿@model rad301_ca2_S00140633.Models.Actor
 
 
-@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "CreateActorForm" }))
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "EditActorForm" }))
 {
     @Html.AntiForgeryToken()
-    <h4 style="color:teal" class="text-center">Add Actor to @ViewBag.MovieTitle</h4>
-    <div class="form-horizontal col-md-offset-2">
 
+    <h4 style="color:teal" class="text-center">Edit Actor in @Model.Movie.Title</h4>
+    <div class="form-horizontal col-md-offset-2">      
         <hr />
+        @Html.HiddenFor(model => model.ActorId)
+        @Html.HiddenFor(model => model.MovieId)
+
         <label id="lblError" style="color:red; display:none" class="input-sm">*All Fields must be filled in</label>
         <div class="form-group">
             <div class="col-md-10">
@@ -37,38 +40,30 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Add New Actor" class="btn btn-sm btn-success" />
+                <input type="submit" value="Save Changes" class="btn btn-sm btn-success" />
             </div>
         </div>
     </div>
 }
 
-<div class="col-md-offset-4 col-md-10">
-    <button class="btn btn-xs btn-info" onclick="showActors(@ViewBag.MovieId)">Back to list</button>
+<div class="col-md-offset-4 col-md-8" >
+    <button class="btn btn-xs btn-info" onclick="showActors(@Model.MovieId)">Back to list</button>
 </div>
 
 <script>
-    $('#CreateActorForm').submit(function () {
-        debugger;
+    $('#EditActorForm').submit(function () {
+
         if(($(this).find('input[name="FirstName"]').val() != "")&&($(this).find('input[name="LastName"]').val() != "")&&($(this).find('input[name="Character"]').val() != ""))
         {
+            debugger;
             $.ajax({
-                url: '@Url.Action("CreateActor", new { id = @ViewBag.MovieId })',
+                url: '@Url.Action("EditActor", "Movies", new { id = Model.MovieId })',
                 type: "POST",
-                data: $(this).serialize() + "&MovieId=" + @ViewBag.MovieId,
-                success: function (dataAct) {
-                    $.ajax({
-                        url: '@Url.Action("HeaderDetails")',
-                        type: "GET",
-                        success: function(dataMovies){
-                            $('#ActorsDiv').hide();
-                            $('#ActorsDiv').html(dataAct);
-                            $('#ActorsDiv').fadeIn(1000);
-                            $('#headerDetails').hide();
-                            $('#headerDetails').html(dataMovies);
-                            $('#headerDetails').fadeIn(1000);
-                        }
-                    });
+                data: $(this).serialize(),
+                success: function (data) {
+                    $('#ActorsDiv').hide();
+                    $('#ActorsDiv').html(data);
+                    $('#ActorsDiv').fadeIn(1000);
                 }
             });
         }
@@ -79,17 +74,5 @@
 
         return false;
     });
-    function BacktoActors()
-    {
-        $.ajax({
-            url: '@Url.Action("CreateActor", new { id = @ViewBag.MovieId })',
-            type: "POST",
-            data: $(this).serialize() + "&MovieId=" + @ViewBag.MovieId,
-            success: function (data) {
-                $('#ActorsDiv').hide();
-                $('#ActorsDiv').html(data);
-                $('#ActorsDiv').fadeIn(1000);
-            }
-        });
-    }
 </script>
+

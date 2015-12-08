@@ -1,0 +1,39 @@
+﻿@model rad301_ca2_S00140633.Models.Actor
+
+
+<div>
+ 
+        <h4 style="color:teal" class="text-center">Delete @Model.FullName from @Model.Movie.Title ?</h4>
+        <div class="form-actions no-color">
+            <button class="btn btn-xs btn-danger" onclick="ConfirmDeleteActor(@Model.ActorId,@Model.MovieId)">Confirm</button> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+
+</div>
+<script>
+    function ConfirmDeleteActor (ActorId, MovieId) {
+        debugger;
+        $.ajax({
+            url: '@Url.Action("DeleteActorConfirmed")',
+            type: "POST",
+            data: { id: ActorId, MovieId: MovieId },
+            success: function (dataAct) {
+                $.ajax({
+                    url: '@Url.Action("HeaderDetails")',
+                    type: "GET",
+                    success: function (dataMovies) {
+                        $('#ActorsDiv').hide();
+                        $('#ActorsDiv').html(dataAct);
+                        $('#ActorsDiv').fadeIn(1000);
+                        $('#headerDetails').hide();
+                        $('#headerDetails').html(dataMovies);
+                        $('#headerDetails').fadeIn(1000);
+                    }
+                });
+            }
+        });
+        return false;
+    };
+
+
+</script>

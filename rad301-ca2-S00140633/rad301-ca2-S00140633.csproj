@@ -241,6 +241,10 @@
     <Content Include="Views\Shared\_MovieDetails.cshtml" />
     <Content Include="Views\Shared\_ActorsInMovie.cshtml" />
     <Content Include="Views\Shared\_AddActor.cshtml" />
+    <Content Include="Views\Shared\_EditActor.cshtml" />
+    <Content Include="Views\Shared\_AllMovies.cshtml" />
+    <Content Include="Views\Shared\_DeleteActor.cshtml" />
+    <Content Include="Views\Shared\_NumberOfMovies.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

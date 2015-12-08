@@ -1,7 +1,8 @@
 ﻿@model IEnumerable<rad301_ca2_S00140633.Models.Actor>
 
 <div id="ActorsDiv">
-    <table class="table " id="actorTbl">
+    <h4 style="color:teal" class="text-center">Actors in @ViewBag.MovieTitle</h4>
+    <table class="table table-striped " id="actorTbl">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.FullName)
@@ -19,28 +20,27 @@
                     @Html.DisplayFor(modelItem => item.FullName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Gender)
+                    <span class="badge">@item.Gender.ToString().Substring(0, 1)</span>
                 </td>
                 <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.ActorId }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.ActorId })
+                    <button onclick="EditActor(@item.ActorId)" class="btn btn-xs btn-info">Edit</button>
+                    <button onclick="DeleteActor(@item.ActorId)" class="btn btn-xs btn-danger">Delete</button>
                 </td>
             </tr>
         }
 
     </table>
-    <button onclick="CreateActor()" class="btn btn-sm btn-info">Create New</button>
+    <button onclick="CreateActor()" class="btn btn-xs btn-info">Add New Actor</button>
 </div>
+
 <script>
     $(function () {
         $("#actorTbl tr td:first-child").tooltip();
     });
 
-    function CreateActor()
-    {
-        debugger;
+    function CreateActor() {
         $.ajax({
-            url: '@Url.Action("CreateActor", new { id = @ViewBag.MovieId })',  
+            url: '@Url.Action("CreateActor", new { id = @ViewBag.MovieId })',
             success: function (data) {
                 $('#ActorsDiv').hide();
                 $('#ActorsDiv').html(data);
@@ -51,4 +51,36 @@
             }
         });
     }
+
+        function EditActor(ActorId) {
+            debugger;
+            $.ajax({
+                url: 'Movies/EditActor/',
+                data: { id: ActorId},
+                success: function (data) {
+                    $('#ActorsDiv').hide();
+                    $('#ActorsDiv').html(data);
+                    $('#ActorsDiv').fadeIn(1000);
+                },
+                error: function () {
+
+                }
+            });
+        }
+        function DeleteActor(ActorId) {
+            debugger;
+            $.ajax({
+                url: 'Movies/DeleteActor/',
+                data: { id: ActorId },
+                success: function (data) {
+                    $('#ActorsDiv').hide();
+                    $('#ActorsDiv').html(data);
+                    $('#ActorsDiv').fadeIn(1000);
+                },
+                error: function () {
+
+                }
+            });
+        }
+
 </script>

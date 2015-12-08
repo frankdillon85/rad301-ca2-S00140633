@@ -1,0 +1,80 @@
+﻿@model IEnumerable<rad301_ca2_S00140633.Models.Movie>
+
+    @if (Model.Any())
+            {
+        <table class="table table-hover" id="movieTbl">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Title)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Cert)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Genre)
+                </th>
+                <th>
+                    Actors
+                </th>
+                <th>
+                    <a class="btn btn-xs btn-info" href="@Url.Action("Index", new { sort = @ViewBag.ratingOrder })">
+                        @if (ViewBag.ratingOrder == "ascRating")
+                        {
+                            <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
+                        }
+                        else if (ViewBag.ratingOrder == "descRating")
+                        {
+                            <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
+
+                        }
+                        &nbsp;Rating
+                    </a>
+
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model)
+                {
+                <tr data-item-id="@item.MovieId">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FilmCert)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Genre)
+                    </td>
+                    <td>
+                        @if (item.Actors.Count == 0)
+                        {
+                            <p class="text-center">None</p>
+                        }
+                        else
+                        {
+                            <p class="text-center">@item.Actors.Count</p>
+                        }
+
+                    </td>
+                    <td>
+                        <span id="ratingSpan" class="rateit" data-rateit-value="@item.Rating" data-rateit-ispreset="true" data-rateit-readonly="true"></span>
+                    </td>
+                    <td>
+                        <button onclick="EditMovie(@item.MovieId)" class="btn btn-xs btn-info">Edit</button>
+                        <button onclick="DeleteMovie(@item.MovieId)" class="btn btn-xs btn-success">Details</button>
+                        <button onclick="EditMovie(@item.MovieId)" class="btn btn-xs btn-danger">Delete</button>
+                    </td>
+                </tr>
+            }
+
+
+        </table>
+
+    }
+    else
+    {
+        <p>Sorry! There are no movies that match your search </p>
+    }
+
+    <button onclick="CreateMovie()" class="btn btn-sm btn-info">Create New</button>
