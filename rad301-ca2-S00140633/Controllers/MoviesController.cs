@@ -174,9 +174,8 @@ namespace rad301_ca2_S00140633.Controllers
         }
 
         // POST: Movies/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        [HttpPost]
+        public ActionResult DeleteMovieConfirmed(int id)
         {
             Movie movie = db.Movies.Find(id);
             db.Movies.Remove(movie);
@@ -313,6 +312,13 @@ namespace rad301_ca2_S00140633.Controllers
             ViewBag.GenderFemale = (movie.Actors.Count(act => act.Gender == Genders.Female) == 0) ? 0 : movie.Actors.Count(act => act.Gender == Genders.Female);
 
             return PartialView("_PieChart", movie);
+        }
+
+
+        public PartialViewResult GetModalMovieDetails(int id)
+        {
+            Movie movie = db.Movies.Find(id);
+            return PartialView("_ModalPreview", movie);
         }
 
         

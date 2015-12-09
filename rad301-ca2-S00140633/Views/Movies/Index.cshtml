@@ -28,15 +28,31 @@
     <div id="AllMovies" class="col-md-10">
 
         <div id="lstMovies" class="col-md-7">
-          
-          @Html.Partial("_AllMovies")
+
+            @Html.Partial("_AllMovies")
         </div>
         <div class="col-md-5" id="divActors" hidden="">
-           
+
         </div>
     </div>
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "DeleteMovieForm" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color" hidden="">
+            <input type="hidden" name="id" id="DFormItemId" />
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+
 
 </div>
+@section topLevel{
+
+    @{ Html.RenderPartial("_DeleteModal"); }
+
+}
 @section scripts
 {
     <script>
@@ -44,7 +60,7 @@
             toastr.info('Welcome to Movie Facts.Click on a movie to see its actors');
         });
 
-        
+
 
         function CreateMovie() {
 
@@ -130,7 +146,39 @@
                 }
             });
         }
-        
+
+        var readUrl = '@Url.Action("Delete")';
+        var deleteUrl = '@Url.Action("DeleteConfirmed")';
+        var confirmUrl = '@Url.Action("GetModalMovieDetails")';
+        var previewContainer = $('#deleteConfirmModal #MovieDetailsPreview');
+        var currentMovieId;
+
+        function updateNotification(Movieid) {
+            debugger;
+            $.ajax({
+                url: '@Url.Action("DeleteMovieConfirmed")',
+                type: "POST",
+                data: { id: Movieid },
+                success: function (data) {
+                    window.location.reload(true);//reloads window
+                }
+            });
+        }
+
+            function confirmDelete(id) {
+                debugger;
+                currentMovieId = id;
+                previewContainer.html('<p>Loading content...</p>');
+                previewContainer.load(confirmUrl, { id: currentMovieId });
+                $('#deleteConfirmModal').modal('show');
+            }
+
+            $(function () {
+                $("#deleteConfirmModal").on('click', "#deleteConfirm", function () {
+                    debugger;
+                    updateNotification(currentMovieId);
+                });
+            });
 
 
     </script>

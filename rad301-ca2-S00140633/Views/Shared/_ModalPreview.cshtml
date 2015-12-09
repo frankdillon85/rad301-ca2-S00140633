@@ -1,0 +1,45 @@
+﻿@model rad301_ca2_S00140633.Models.Movie
+
+<p>You have selected to delete this movie.</p>
+<p>
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h4>@Model.Title</h4>
+        </div>
+        <div class="panel-body">
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Title)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Title)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Cert)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.FilmCert)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Genre)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Genre)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Rating)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Rating) Stars
+                </dd>
+
+            </dl>
+        </div>
+    </div>
+</p>
