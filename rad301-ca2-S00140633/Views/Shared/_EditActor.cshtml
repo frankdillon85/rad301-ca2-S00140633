@@ -59,14 +59,27 @@
                 type: "POST",
                 data: $(this).serialize(),
                 success: function (data) {
-                    $('#ActorsDiv').hide();
-                    $('#ActorsDiv').html(data);
-                    $('#ActorsDiv').fadeIn(1000);
+                    $.ajax({
+                        url: '@Url.Action("showPieChart", new {id= @Model.MovieId })',//update pie chart
+                        type: "GET",
+                        success: function (dataPiechart) {
+                            $('#ActorsDiv').hide();
+                            $('#ActorsDiv').html(data);
+                            $('#ActorsDiv').fadeIn(1000);
+                            $('#piechart').hide();
+                            $('#piechart').html(dataPiechart);
+                            $('#piechart').fadeIn(1000);
+                        },
+                        error: function () {
+                            $('#piechart').html('<h3>Error updating PieChart</h3>');
+                        }
+                    });
                 },
                 error: function () {
                     $('#ActorsDiv').html('<h3>Error editing Actor</h3>');
                 }
             });
+
         }
         else
         {
@@ -75,6 +88,6 @@
 
         return false;
     });
-    
+
 </script>
 
