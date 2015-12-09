@@ -104,10 +104,10 @@
             });
         }
 
-        $('#movieTbl tr').click(function (evt) {
+        $('#movieTbl tr').not(':first').click(function (evt) {
             var movieId = $(this).data("item-id");
-            var $cell=$(evt.target).closest('td');//stpr click event on the last column
-            if ($cell.index() < 4) {
+            var $cell=$(evt.target).closest('td');//stop click event on the last column
+            if ($cell.index() < 5) {
                 $("#movieTbl tr").css("background", "#fff")
                 $(this).css('background-color', '#ffffb3');
                 showActors(movieId)
@@ -126,7 +126,7 @@
                     toastr.info('Hover over actor name to see their character')
                 },
                 error: function (data) {
-                    $('#Detail').html('<h3>Error in retrieval</h3>');
+                    $('#divActors').html('<h3>Error in retrieval</h3>');
                 }
             });
         }

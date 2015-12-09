@@ -6,7 +6,7 @@
         <h4 style="color:teal" class="text-center">Delete @Model.FullName from @Model.Movie.Title ?</h4>
         <div class="col-md-offset-4">
             <button class="btn btn-xs btn-danger" onclick="ConfirmDeleteActor(@Model.ActorId)">Confirm</button> |
-            <button class="btn btn-xs btn-info" onclick="BackActors(@Model.MovieId)">Back to list</button>
+            <button class="btn btn-xs btn-info" onclick="BackActors(@Model.MovieId)">Back to Actors</button>
         </div>
 
 </div>
@@ -34,31 +34,27 @@
                                 $('#headerDetails').fadeIn(1000);
                                 $('#piechart').hide();
                                 $('#piechart').html(dataPiechart);
-                                $('#piechart').fadeIn(1000);
-
+                                $('#piechart').fadeIn(1000)
+                            
+                                },
+                            error: function(dataPieChart)
+                            {
+                                $('#piechart').html('<h3>Error with update</h3>');
                             }
                         });
+                    },
+                    error: function (dataPieChart) {
+                        $('#headerDetails').html('<h3>Error with update</h3>');
                     }
                 });
+            },
+            error: function (dataPieChart) {
+                $('#Actors').html('<h3>Error with Delete</h3>');
             }
         });
         return false;
     };
-    function BackActors(movieId) {
-        $.ajax({
-            type: "GET",
-            url: '@Url.Action("ActorsById")',
-            data: { id: movieId },
-            success: function (data) {
-                $('#ActorsDiv').html(data);
-                $('#ActorsDiv').fadeIn("slow");
-                toastr.info('Hover over actor name to see their character')
-            },
-            error: function (data) {
-                $('#Detail').html('<h3>Error in retrieval</h3>');
-            }
-        });
-    }
+
 
 
 </script>

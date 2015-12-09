@@ -36,10 +36,12 @@
         </dd>
 
     </dl>
-    <p>
-        @Html.ActionLink("Edit", "Edit", new { id = Model.MovieId }) |
-        @Html.ActionLink("Back to List", "Index")
-    </p>
+
+        <div class="col-md-offset-4">
+            <button onclick="EditMovie(@Model.MovieId,@Model.Rating)" class="btn btn-xs btn-info">Edit</button> |
+            @Html.ActionLink("Back to Movies", "Index",null ,new { @class = "btn btn-danger btn-xs" })
+        </div>
+
 </div>
 
 <div id="ActorsDiv" class="col-md-4">

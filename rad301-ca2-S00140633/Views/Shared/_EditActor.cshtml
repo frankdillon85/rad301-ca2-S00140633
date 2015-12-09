@@ -37,15 +37,15 @@
         </div>
 
         <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
+            <div class="col-md-10 text-center">
                 <input type="submit" value="Save Changes" class="btn btn-sm btn-success" />
             </div>
         </div>
     </div>
 }
 
-<div class="col-md-offset-4 col-md-8" >
-    <button class="btn btn-xs btn-info" onclick="BackActors(@Model.MovieId)">Back to list</button>
+<div class="col-md-12 text-center" >
+    <button class="btn btn-xs btn-info" onclick="BackActors(@Model.MovieId)">Back to Actors</button>
 </div>
 
 <script>
@@ -62,6 +62,9 @@
                     $('#ActorsDiv').hide();
                     $('#ActorsDiv').html(data);
                     $('#ActorsDiv').fadeIn(1000);
+                },
+                error: function () {
+                    $(this).html('<h3>Error editing Actor</h3>');
                 }
             });
         }
@@ -72,20 +75,6 @@
 
         return false;
     });
-    function BackActors(movieId) {
-        $.ajax({
-            type: "GET",
-            url: '@Url.Action("ActorsById")',
-            data: { id: movieId },
-            success: function (data) {
-                $('#ActorsDiv').html(data);
-                $('#ActorsDiv').fadeIn("slow");
-                toastr.info('Hover over actor name to see their character')
-            },
-            error: function (data) {
-                $('#Detail').html('<h3>Error in retrieval</h3>');
-            }
-        });
-    }
+    
 </script>
 

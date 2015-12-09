@@ -14,17 +14,18 @@ namespace rad301_ca2_S00140633.Controllers
     {
         private MovieDB db = new MovieDB();
 
+        #region CRUD operations For Actors
         // GET: Movies
         public ActionResult Index(string movieGenre, string searchString, string sort)
         {
-            
+
             if (sort == null) sort = "ascRating";
             ViewBag.ratingOrder = (sort == "ascRating") ? "descRating" : "ascRating";
 
             IQueryable<Movie> movies = db.Movies;
             switch (sort)
             {
-                
+
                 case "ascRating":
                     ViewBag.dateOrder = "descRating";
                     movies = movies.OrderByDescending(c => c.Rating).Include(c => c.Actors);
@@ -40,8 +41,8 @@ namespace rad301_ca2_S00140633.Controllers
             }
 
             var GenreQry = (from m in db.Movies
-                           orderby m.Genre
-                           select m.Genre).Distinct();
+                            orderby m.Genre
+                            select m.Genre).Distinct();
 
             ViewBag.movieGenre = new SelectList(GenreQry);
 
@@ -58,11 +59,16 @@ namespace rad301_ca2_S00140633.Controllers
 
             return View(movies.ToList());
         }
+        //partial view to show number of Movies and actors
         public PartialViewResult HeaderDetails()
         {
             ViewBag.PageTitle = db.Movies.Count() + " Movies with " + db.Actors.Count() + " Actors";
             return PartialView("_NumberOfMovies");
         }
+
+
+        
+        //partial view list of movies
         public PartialViewResult ListOfMovies()
         {
             return PartialView("_AllMovies", db.Movies.ToList());
@@ -70,19 +76,18 @@ namespace rad301_ca2_S00140633.Controllers
         //GET: Movies/Details/5
         public PartialViewResult Details(int? id)
         {
-            
+
             if (id == null)
             {
-                //return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return PartialView("_Error");
             }
             Movie movie = db.Movies.Find(id);
             if (movie == null)
             {
-                //return HttpNotFound();
+                return PartialView("_Error");
             }
-            
 
-            return PartialView("_MovieDetails",movie);
+            return PartialView("_MovieDetails", movie);
         }
 
         // GET: Movies/Create
@@ -98,14 +103,21 @@ namespace rad301_ca2_S00140633.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult CreateMovie([Bind(Include = "MovieId,Title,Cert,Genre,Rating")] Movie movie)
         {
-            if (ModelState.IsValid)
+            try
             {
-                db.Movies.Add(movie);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
+                if (ModelState.IsValid)
+                {
+                    db.Movies.Add(movie);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
 
-            return View(movie);
+                return View("_Error");
+            }
+            catch
+            {
+                return View("_Error");
+            }
         }
 
         // GET: Movies/Edit/5
@@ -113,14 +125,14 @@ namespace rad301_ca2_S00140633.Controllers
         {
             if (id == null)
             {
-                //return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return PartialView("_Error");
             }
             Movie movie = db.Movies.Find(id);
             if (movie == null)
             {
-                //return HttpNotFound();
+                return PartialView("_Error");
             }
-            return PartialView("_EditMovie",movie);
+            return PartialView("_EditMovie", movie);
         }
 
         // POST: Movies/Edit/5
@@ -130,28 +142,35 @@ namespace rad301_ca2_S00140633.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "MovieId,Title,Cert,Genre,Rating")] Movie movie)
         {
-            if (ModelState.IsValid)
+            try
             {
-                db.Entry(movie).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.Entry(movie).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                return View("_Error");
             }
-            return View(movie);
+            catch
+            {
+                return View("_Error");
+            }
         }
 
         // GET: Movies/Delete/5
-        public ActionResult Delete(int? id)
+        public PartialViewResult Delete(int? id)
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return PartialView("_Error");
             }
             Movie movie = db.Movies.Find(id);
             if (movie == null)
             {
-                return HttpNotFound();
+                return PartialView("_Error");
             }
-            return View(movie);
+            return PartialView(movie);
         }
 
         // POST: Movies/Delete/5
@@ -164,6 +183,7 @@ namespace rad301_ca2_S00140633.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+        #endregion
 
         #region Actors Crud Operations
         public PartialViewResult ActorsbyId(int id)
@@ -193,18 +213,24 @@ namespace rad301_ca2_S00140633.Controllers
         [ValidateAntiForgeryToken]
         public PartialViewResult CreateActor([Bind(Include = "ActorId,FirstName,LastName,Gender,Character,MovieId")] Actor actor, int id)
         {
-            var movie = db.Movies.Find(id);
-            @ViewBag.MovieId = id;
-            ViewBag.MovieTitle = movie.Title;
+            try {
+                var movie = db.Movies.Find(id);
+                @ViewBag.MovieId = id;
+                ViewBag.MovieTitle = movie.Title;
 
-            if (ModelState.IsValid)
-            {
-                db.Actors.Add(actor);
-                db.SaveChanges();
-                return PartialView("_ActorsInMovie", movie.Actors);
+                if (ModelState.IsValid)
+                {
+                    db.Actors.Add(actor);
+                    db.SaveChanges();
+                    return PartialView("_ActorsInMovie", movie.Actors);
+                }
+
+                return PartialView("_Error");
             }
-
-            return PartialView("_ActorsInMovie");
+            catch
+            {
+                return PartialView("_Error");
+            }
         }
         // GET: Movies/Edit/5
         public PartialViewResult EditActor(int? id)
@@ -212,14 +238,14 @@ namespace rad301_ca2_S00140633.Controllers
 
             if (id == null)
             {
-                //return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return PartialView("_Error");
             }
             Actor actor = db.Actors.Find(id);
             if (actor == null)
             {
-                //return HttpNotFound();
+                return PartialView("_Error");
             }
-            return PartialView("_EditActor",actor);
+            return PartialView("_EditActor", actor);
         }
 
         // POST: Movies/Edit/5
@@ -229,30 +255,37 @@ namespace rad301_ca2_S00140633.Controllers
         [ValidateAntiForgeryToken]
         public PartialViewResult EditActor([Bind(Include = "ActorId,FirstName,LastName,Gender,Character,MovieId")] Actor actor)
         {
-            var movie = db.Movies.Find(actor.MovieId);
-            @ViewBag.MovieId = movie.MovieId;
-            ViewBag.MovieTitle = movie.Title;
-
-            if (ModelState.IsValid)
+            try
             {
-                db.Entry(actor).State = EntityState.Modified;
-                db.SaveChanges();
-                return PartialView("_ActorsInMovie", movie.Actors); 
+                var movie = db.Movies.Find(actor.MovieId);
+                @ViewBag.MovieId = movie.MovieId;
+                ViewBag.MovieTitle = movie.Title;
+
+                if (ModelState.IsValid)
+                {
+                    db.Entry(actor).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return PartialView("_ActorsInMovie", movie.Actors);
+                }
+                return PartialView("_Error");
             }
-            return PartialView("_ActorsInMovie", movie.Actors);
+            catch
+            {
+                return PartialView("_Error");
+            }
         }
         public PartialViewResult DeleteActor(int? id)
         {
             if (id == null)
             {
-                //return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return PartialView("_Error");
             }
             Actor actor = db.Actors.Find(id);
             if (actor == null)
             {
-                //return HttpNotFound();
+                return PartialView("_Error");
             }
-            return PartialView("_DeleteActor",actor);
+            return PartialView("_DeleteActor", actor);
         }
 
         // POST: Movies/DeleteActorConfirmed/5
@@ -269,18 +302,20 @@ namespace rad301_ca2_S00140633.Controllers
             db.SaveChanges();
             return PartialView("_ActorsInMovie", movie.Actors);
         }
+        #endregion
 
+        //partial view for pie chart
         public PartialViewResult showPieChart(int? id)
         {
             Movie movie = db.Movies.Find(id);
 
-            ViewBag.GenderMale = (movie.Actors.Count(act => act.Gender == Genders.Male)==0)? 0 : movie.Actors.Count(act => act.Gender == Genders.Male);
+            ViewBag.GenderMale = (movie.Actors.Count(act => act.Gender == Genders.Male) == 0) ? 0 : movie.Actors.Count(act => act.Gender == Genders.Male);
             ViewBag.GenderFemale = (movie.Actors.Count(act => act.Gender == Genders.Female) == 0) ? 0 : movie.Actors.Count(act => act.Gender == Genders.Female);
 
             return PartialView("_PieChart", movie);
         }
 
-        #endregion
+        
         protected override void Dispose(bool disposing)
         {
             if (disposing)

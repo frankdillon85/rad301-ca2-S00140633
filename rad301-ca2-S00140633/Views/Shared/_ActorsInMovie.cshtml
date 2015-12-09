@@ -83,5 +83,20 @@
                 }
             });
         }
+    function BackActors(movieId) {
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("ActorsById")',
+            data: { id: movieId },
+            success: function (data) {
+                $('#ActorsDiv').html(data);
+                $('#ActorsDiv').fadeIn("slow");
+                toastr.info('Hover over actor name to see their character')
+            },
+            error: function (data) {
+                $('#ActorsDiv').html('<h3>Error in retrieval</h3>');
+            }
+        });
+    }
 
 </script>
