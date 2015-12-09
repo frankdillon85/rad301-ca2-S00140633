@@ -47,12 +47,12 @@ namespace rad301_ca2_S00140633.Controllers
             ViewBag.movieGenre = new SelectList(GenreQry);
 
 
-            if (!String.IsNullOrEmpty(searchString))
+            if (!String.IsNullOrEmpty(searchString))// string search
             {
                 movies = movies.Where(s => s.Title.Contains(searchString));
             }
 
-            if (!string.IsNullOrEmpty(movieGenre))
+            if (!string.IsNullOrEmpty(movieGenre))// genre selected
             {
                 movies = movies.Where(x => x.Genre.ToString() == movieGenre);
             }
@@ -76,7 +76,6 @@ namespace rad301_ca2_S00140633.Controllers
         //GET: Movies/Details/5
         public PartialViewResult Details(int? id)
         {
-
             if (id == null)
             {
                 return PartialView("_Error");
@@ -185,6 +184,8 @@ namespace rad301_ca2_S00140633.Controllers
         #endregion
 
         #region Actors Crud Operations
+
+        //show list of actors for selected movie
         public PartialViewResult ActorsbyId(int id)
         {
             var movie = db.Movies.Find(id);
@@ -206,8 +207,6 @@ namespace rad301_ca2_S00140633.Controllers
         }
 
         // POST: Movies/CreateActor
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public PartialViewResult CreateActor([Bind(Include = "ActorId,FirstName,LastName,Gender,Character,MovieId")] Actor actor, int id)
@@ -315,6 +314,7 @@ namespace rad301_ca2_S00140633.Controllers
         }
 
 
+        //movie details displayed in modal
         public PartialViewResult GetModalMovieDetails(int id)
         {
             Movie movie = db.Movies.Find(id);

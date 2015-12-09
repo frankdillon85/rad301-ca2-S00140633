@@ -56,16 +56,15 @@
 @section scripts
 {
     <script>
-        $(function() { // ready event
+        $(function() { 
             toastr.info('Welcome to Movie Facts.Click on a movie to see its actors');
         });
 
 
-
+        //create moview partial
         function CreateMovie() {
 
-
-            $('#FilterDiv').block({ message: null });
+            $('#FilterDiv').block({ message: null });//blocks filter from being used
 
             $.ajax({
                 url: '@Url.Action("CreateMovie")',
@@ -80,6 +79,7 @@
                 }
             });
         }
+        //edit movie partial view
         function EditMovie(MovieId,rating) {
 
 
@@ -96,7 +96,7 @@
                     $('#ratingsEdit').rateit({ max: 5, step: 0.25, value: rating});
                 },
                 error: function () {
-
+                    $('#AllMovies').html('<h3>Error editing actors</h3>')
                 }
             });
         }
@@ -105,6 +105,7 @@
 
             $('#FilterDiv').block({ message: null });
 
+            // gets list of movies
             $.ajax({
                 url: '@Url.Action("Details")',
                 type: 'GET',
@@ -115,13 +116,14 @@
                     $('#AllMovies').fadeIn(1000);
                 },
                 error: function () {
-
+                    $('#AllMovies').html('<h3>Error getting actors</h3>');
                 }
             });
         }
 
+        //allows for selecting of rows
         $('#movieTbl tr').not(':first').click(function (evt) {
-            var movieId = $(this).data("item-id");
+            var movieId = $(this).data("item-id");//gets movieid
             var $cell=$(evt.target).closest('td');//stop click event on the last column
             if ($cell.index() < 5) {
                 $("#movieTbl tr").css("background", "#fff")
@@ -130,6 +132,7 @@
             }
         });
 
+        //shows actors for selected movie
         function showActors(movieId)
         {
             $.ajax({
@@ -147,13 +150,12 @@
             });
         }
 
-        var readUrl = '@Url.Action("Delete")';
-        var deleteUrl = '@Url.Action("DeleteConfirmed")';
         var confirmUrl = '@Url.Action("GetModalMovieDetails")';
-        var previewContainer = $('#deleteConfirmModal #MovieDetailsPreview');
+        var previewContainer = $('#deleteConfirmModal #MovieDetailsPreview');//container where movie details are displayed
         var currentMovieId;
 
-        function updateNotification(Movieid) {
+        //function for deleteing movie
+        function deleteMovie(Movieid) {
             debugger;
             $.ajax({
                 url: '@Url.Action("DeleteMovieConfirmed")',
@@ -161,22 +163,24 @@
                 data: { id: Movieid },
                 success: function (data) {
                     window.location.reload(true);//reloads window
+                },
+                error: function () {
+                    $('#AllMovies').html('<h3>Error Deleting Movie</h3>');
                 }
             });
         }
-
+        //shows modal and populates it with movie details
             function confirmDelete(id) {
-                debugger;
                 currentMovieId = id;
                 previewContainer.html('<p>Loading content...</p>');
                 previewContainer.load(confirmUrl, { id: currentMovieId });
                 $('#deleteConfirmModal').modal('show');
             }
 
+        //
             $(function () {
                 $("#deleteConfirmModal").on('click', "#deleteConfirm", function () {
-                    debugger;
-                    updateNotification(currentMovieId);
+                    deleteMovie(currentMovieId);
                 });
             });
 

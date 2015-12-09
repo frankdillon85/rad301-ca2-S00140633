@@ -53,16 +53,16 @@
         if(($(this).find('input[name="FirstName"]').val() != "")&&($(this).find('input[name="LastName"]').val() != "")&&($(this).find('input[name="Character"]').val() != ""))
         {
             $.ajax({
-                url: '@Url.Action("CreateActor", new { id = @ViewBag.MovieId })',
+                url: '@Url.Action("CreateActor", new { id = @ViewBag.MovieId })',//create new actor
                 type: "POST",
                 data: $(this).serialize() + "&MovieId=" + @ViewBag.MovieId,
                 success: function (dataAct) {
                     $.ajax({
-                        url: '@Url.Action("HeaderDetails")',
+                        url: '@Url.Action("HeaderDetails")',//update header details
                         type: "GET",
                         success: function(dataMovies){
                             $.ajax({
-                                url: '@Url.Action("showPieChart", new {id= @ViewBag.MovieId })',
+                                url: '@Url.Action("showPieChart", new {id= @ViewBag.MovieId })',//update pie chart
                                 type: "GET",
                                 success: function (dataPiechart) {
                                     $('#ActorsDiv').hide();

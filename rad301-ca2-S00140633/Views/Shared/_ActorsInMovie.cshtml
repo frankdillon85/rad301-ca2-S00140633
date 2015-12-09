@@ -43,7 +43,7 @@
 
 <script>
     $(function () {
-        $("#actorTbl tr td:first-child").tooltip();
+        $("#actorTbl tr td:first-child").tooltip();//shows actors character when hover over
     });
 
     function CreateActor() {
@@ -55,7 +55,7 @@
                 $('#ActorsDiv').fadeIn(1000);
             },
             error: function () {
-
+                $('#ActorsDiv').html('<h3>Error creating Actor</h3>');
             }
         });
     }
